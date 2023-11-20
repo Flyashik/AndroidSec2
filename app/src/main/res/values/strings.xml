@@ -35,4 +35,7 @@
     <string name="sell">Sell</string>
     <string name="yes">Yes</string>
     <string name="required_fields">*required fields</string>
+    <string name="shipper_name">Shipper*</string>
+    <string name="phone_number">Phone*</string>
+    <string name="shipper_email">E-mail*</string>
 </resources>

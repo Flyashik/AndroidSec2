@@ -22,8 +22,8 @@ class ItemDaoTest {
     private lateinit var inventoryDatabase: InventoryDatabase
 
 
-    private var item1 = Item(1, "Apples", 10.0, 20)
-    private var item2 = Item(2, "Bananas", 15.0, 97)
+    private var item1 = Item(1, "Apples", 10.0, 20, "someName", "79362375643", "some@ex.com")
+    private var item2 = Item(2, "Bananas", 15.0, 97, "otherName", "79478975643", "other@ex.com")
     @Before
     fun createDb() {
         val context: Context = ApplicationProvider.getApplicationContext()
