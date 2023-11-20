@@ -27,6 +27,7 @@ import com.example.inventory.ui.theme.InventoryTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MAIN = this
         setContent {
             InventoryTheme {
                 // A surface container using the 'background' color from the theme

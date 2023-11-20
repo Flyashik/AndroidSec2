@@ -38,4 +38,5 @@
     <string name="shipper_name">Shipper*</string>
     <string name="phone_number">Phone*</string>
     <string name="shipper_email">E-mail*</string>
+    <string name="share_item_title">Share...</string>
 </resources>
