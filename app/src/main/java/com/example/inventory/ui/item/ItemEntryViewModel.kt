@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.inventory.data.Item
 import com.example.inventory.data.ItemsRepository
+import com.example.inventory.data.SourceType
 import java.text.NumberFormat
 
 /**
@@ -74,6 +75,7 @@ data class ItemDetails(
     val shipperName: String = "",
     val shipperPhone: String = "",
     val shipperEmail: String = "",
+    val sourceType: SourceType = SourceType.Manual
 )
 
 /**
@@ -89,6 +91,7 @@ fun ItemDetails.toItem(): Item = Item(
     shipperName = shipperName,
     shipperPhone = shipperPhone,
     shipperEmail = shipperEmail,
+    sourceType = sourceType
 )
 
 fun Item.formattedPrice(): String {
@@ -114,4 +117,5 @@ fun Item.toItemDetails(): ItemDetails = ItemDetails(
     shipperName = shipperName,
     shipperPhone = shipperPhone,
     shipperEmail = shipperEmail,
+    sourceType = sourceType
 )

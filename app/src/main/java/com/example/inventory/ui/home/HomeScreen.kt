@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,11 +30,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -53,6 +57,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
 import com.example.inventory.data.Item
+import com.example.inventory.data.SourceType
 import com.example.inventory.ui.AppViewModelProvider
 import com.example.inventory.ui.item.formattedPrice
 import com.example.inventory.ui.navigation.NavigationDestination
@@ -72,6 +77,7 @@ object HomeDestination : NavigationDestination {
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
     navigateToItemUpdate: (Int) -> Unit,
+    navigateToSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -85,6 +91,15 @@ fun HomeScreen(
                 canNavigateBack = false,
                 scrollBehavior = scrollBehavior
             )
+            IconButton(
+                onClick = navigateToSettings,
+                modifier = Modifier.absolutePadding(350.dp, 10.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = stringResource(R.string.settings_title),
+                )
+            }
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -187,7 +202,7 @@ private fun InventoryItem(
 fun HomeBodyPreview() {
     InventoryTheme {
         HomeBody(listOf(
-            Item(1, "Game", 100.0, 20, "Vanchous", "78888888888", "@vanchous@ex.com"), Item(2, "Pen", 200.0, 30, "Sanchous", "79999999999", "sanchous@ex.com"), Item(3, "TV", 300.0, 50, "Anchous", "79898989898", "anchous@ex.com")
+            Item(1, "Game", 100.0, 20, "Vanchous", "78888888888", "@vanchous@ex.com", SourceType.Manual), Item(2, "Pen", 200.0, 30, "Sanchous", "79999999999", "sanchous@ex.com", SourceType.Manual), Item(3, "TV", 300.0, 50, "Anchous", "79898989898", "anchous@ex.com", SourceType.Manual)
         ), onItemClick = {})
     }
 }
@@ -205,7 +220,7 @@ fun HomeBodyEmptyListPreview() {
 fun InventoryItemPreview() {
     InventoryTheme {
         InventoryItem(
-            Item(1, "Game", 100.0, 20, "Somebody", "78965474321", "oncetoldme@rip.legend"),
+            Item(1, "Game", 100.0, 20, "Somebody", "78965474321", "oncetoldme@rip.legend", SourceType.Manual),
         )
     }
 }

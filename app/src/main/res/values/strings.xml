@@ -39,4 +39,12 @@
     <string name="phone_number">Phone*</string>
     <string name="shipper_email">E-mail*</string>
     <string name="share_item_title">Share...</string>
+    <string name="settings_title">Settings</string>
+    <string name="shipper_name_default">Default shipper name</string>
+    <string name="shipper_email_default">Default shipper E-mail</string>
+    <string name="shipper_phone_default">Default shipper phone</string>
+    <string name="enable_default_settings">Enable default fields</string>
+    <string name="hide_sensitive_data">Hide sensitive data</string>
+    <string name="disable_sharing">Disable sharing</string>
+    <string name="save_title">Save</string>
 </resources>
