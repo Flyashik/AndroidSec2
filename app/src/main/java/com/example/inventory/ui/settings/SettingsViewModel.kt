@@ -1,11 +1,13 @@
 package com.example.inventory.ui.settings
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.example.inventory.data.Settings
 import com.example.inventory.ui.item.ItemUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,12 +16,12 @@ import kotlinx.coroutines.flow.asStateFlow
 class SettingsViewModel: ViewModel() {
     fun initUiState() {
         _uiState.value = SettingsUiState(
-            shipperName = "",
-            shipperEmail = "",
-            shipperPhone = "",
-            enableDefaultSettings = false,
-            hideSensitiveData = false,
-            disableSharing = false,
+            shipperName = Settings.defaultShipperName,
+            shipperEmail = Settings.defaultShipperEmail,
+            shipperPhone = Settings.defaultShipperPhone,
+            enableDefaultFields = Settings.enableDefaultFields,
+            hideSensitiveData = Settings.hideSensitiveData,
+            disableSharing = Settings.disableSharing,
         )
     }
 
@@ -38,8 +40,8 @@ class SettingsViewModel: ViewModel() {
         _uiState.value = _uiState.value.copy(shipperEmail = value)
     }
 
-    fun onEnableDefaultSettingsChage(value: Boolean) {
-        _uiState.value = _uiState.value.copy(enableDefaultSettings = value)
+    fun onEnableDefaultFieldsChange(value: Boolean) {
+        _uiState.value = _uiState.value.copy(enableDefaultFields = value)
     }
 
     fun onHideSensitiveDataChange(value: Boolean) {
@@ -49,13 +51,22 @@ class SettingsViewModel: ViewModel() {
     fun onDisableSharingChange(value: Boolean) {
         _uiState.value = _uiState.value.copy(disableSharing = value)
     }
+
+    fun save() {
+        Settings.defaultShipperName = uiState.value.shipperName
+        Settings.defaultShipperPhone = uiState.value.shipperPhone
+        Settings.defaultShipperEmail = uiState.value.shipperEmail
+        Settings.enableDefaultFields = uiState.value.enableDefaultFields
+        Settings.hideSensitiveData = uiState.value.hideSensitiveData
+        Settings.disableSharing = uiState.value.disableSharing
+    }
 }
 
 data class SettingsUiState(
     val shipperName: String = "",
     val shipperPhone: String = "",
     val shipperEmail: String = "",
-    val enableDefaultSettings: Boolean = false,
+    val enableDefaultFields: Boolean = false,
     val hideSensitiveData: Boolean = false,
     val disableSharing: Boolean = false,
 )

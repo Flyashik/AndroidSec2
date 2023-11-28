@@ -3,7 +3,6 @@ package com.example.inventory.ui.settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,10 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
-import com.example.inventory.ui.AppViewModelProvider
 import com.example.inventory.ui.navigation.NavigationDestination
-import java.util.Currency
-import java.util.Locale
 
 object SettingsDestination: NavigationDestination {
     override val route = "settings"
@@ -66,11 +62,11 @@ fun SettingsScreen(
         },
         ) { innerPadding ->
             SettingsBody(
+            viewModel = viewModel,
             uiState = uiState,
             navigateBack = navigateBack,
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxSize()
         )
     }
 }
@@ -78,17 +74,18 @@ fun SettingsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsBody(
+    viewModel: SettingsViewModel,
     uiState: SettingsUiState,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large)),
+        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium))
     ) {
         OutlinedTextField(
             value = uiState.shipperName,
-            onValueChange = {},
+            onValueChange = { viewModel.onNameChange(it) },
             label = { Text(stringResource(R.string.shipper_name_default))},
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -101,7 +98,7 @@ fun SettingsBody(
         )
         OutlinedTextField(
             value = uiState.shipperPhone,
-            onValueChange = {},
+            onValueChange = { viewModel.onPhoneChange(it) },
             label = { Text(stringResource(R.string.shipper_phone_default))},
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             colors = OutlinedTextFieldDefaults.colors(
@@ -115,7 +112,7 @@ fun SettingsBody(
         )
         OutlinedTextField(
             value = uiState.shipperEmail,
-            onValueChange = {},
+            onValueChange = { viewModel.onEmailChange(it) },
             label = { Text(stringResource(R.string.shipper_email_default))},
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -133,11 +130,11 @@ fun SettingsBody(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                checked = uiState.enableDefaultSettings,
-                onCheckedChange = {},
+                checked = uiState.enableDefaultFields,
+                onCheckedChange = { viewModel.onEnableDefaultFieldsChange(it) },
                 modifier = Modifier.padding(end = 8.dp)
             )
-            Text(text = stringResource(id = R.string.enable_default_settings))
+            Text(text = stringResource(id = R.string.enable_default_fields))
         }
         Row(
             modifier = Modifier
@@ -147,7 +144,7 @@ fun SettingsBody(
         ) {
             Checkbox(
                 checked = uiState.hideSensitiveData,
-                onCheckedChange = {},
+                onCheckedChange = { viewModel.onHideSensitiveDataChange(it) },
                 modifier = Modifier.padding(end = 8.dp)
             )
             Text(text = stringResource(id = R.string.hide_sensitive_data))
@@ -160,16 +157,20 @@ fun SettingsBody(
         ) {
             Checkbox(
                 checked = uiState.disableSharing,
-                onCheckedChange = {},
+                onCheckedChange = { viewModel.onDisableSharingChange(it) },
                 modifier = Modifier.padding(end = 8.dp)
             )
             Text(text = stringResource(id = R.string.disable_sharing))
         }
-
         Button(
-            onClick = { navigateBack() },
+            onClick = {
+                viewModel.save()
+                navigateBack()
+            },
+            shape = MaterialTheme.shapes.small,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = stringResource(id = R.string.save_title))
+            Text(text = stringResource(id = R.string.save_action))
         }
     }
 }

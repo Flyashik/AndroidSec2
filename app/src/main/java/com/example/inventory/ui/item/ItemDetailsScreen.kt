@@ -60,6 +60,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
 import com.example.inventory.data.Item
+import com.example.inventory.data.Settings
 import com.example.inventory.ui.AppViewModelProvider
 import com.example.inventory.ui.navigation.NavigationDestination
 import com.example.inventory.ui.theme.InventoryTheme
@@ -92,7 +93,8 @@ fun ItemDetailsScreen(
             )
             IconButton(
                 onClick = { viewModel.shareItem() },
-                modifier = Modifier.absolutePadding(350.dp, 10.dp)
+                modifier = Modifier.absolutePadding(350.dp, 10.dp),
+                enabled = !Settings.disableSharing
             ) {
                 Icon(
                     imageVector = Icons.Default.Share,
@@ -222,14 +224,14 @@ fun ItemDetails(
             )
             ItemDetailsRow(
                 labelResID = R.string.phone_number,
-                itemDetail = item.shipperPhone,
+                itemDetail = if (!Settings.hideSensitiveData) item.shipperPhone else "*******",
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(id = R.dimen.padding_medium)
                 )
             )
             ItemDetailsRow(
                 labelResID = R.string.shipper_email,
-                itemDetail = item.shipperEmail,
+                itemDetail = if (!Settings.hideSensitiveData) item.shipperEmail else "*******",
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(id = R.dimen.padding_medium)
                 )

@@ -43,8 +43,7 @@
     <string name="shipper_name_default">Default shipper name</string>
     <string name="shipper_email_default">Default shipper E-mail</string>
     <string name="shipper_phone_default">Default shipper phone</string>
-    <string name="enable_default_settings">Enable default fields</string>
+    <string name="enable_default_fields">Enable default fields</string>
     <string name="hide_sensitive_data">Hide sensitive data</string>
     <string name="disable_sharing">Disable sharing</string>
-    <string name="save_title">Save</string>
 </resources>

@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.inventory.data.Item
 import com.example.inventory.data.ItemsRepository
+import com.example.inventory.data.Settings
 import com.example.inventory.data.SourceType
 import java.text.NumberFormat
 
@@ -63,7 +64,18 @@ class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewMod
  * Represents Ui State for an Item.
  */
 data class ItemUiState(
-    val itemDetails: ItemDetails = ItemDetails(),
+    val itemDetails: ItemDetails = if (!Settings.enableDefaultFields)
+        ItemDetails()
+    else ItemDetails(
+        id = 0,
+        name = "",
+        price = "",
+        quantity = "",
+        shipperName = Settings.defaultShipperName,
+        shipperPhone = Settings.defaultShipperPhone,
+        shipperEmail = Settings.defaultShipperEmail,
+        sourceType = SourceType.Manual,
+    ),
     val isEntryValid: Boolean = false
 )
 
@@ -75,7 +87,7 @@ data class ItemDetails(
     val shipperName: String = "",
     val shipperPhone: String = "",
     val shipperEmail: String = "",
-    val sourceType: SourceType = SourceType.Manual
+    val sourceType: SourceType = SourceType.Manual,
 )
 
 /**
