@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.example.inventory.MASTER_KEY
 
 object Settings {
     private lateinit var app: Application
@@ -15,6 +16,7 @@ object Settings {
         masterKey = MasterKey.Builder(app, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
+        MASTER_KEY = masterKey
         sharedPreferences = EncryptedSharedPreferences.create(
             context,
             SETTINGS_PREFERENCES_NAME,
@@ -23,7 +25,6 @@ object Settings {
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
     }
-
     var defaultShipperName: String
         get() = sharedPreferences.getString(DEF_NAME_KEY, "")!!
         set(value) {

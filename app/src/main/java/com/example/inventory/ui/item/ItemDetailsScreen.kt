@@ -16,6 +16,8 @@
 
 package com.example.inventory.ui.item
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,7 +53,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -83,6 +87,13 @@ fun ItemDetailsScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState()
 
+    val saveFileLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.CreateDocument()
+        ) { uri ->
+            if (uri == null) return@rememberLauncherForActivityResult
+            viewModel.saveToFile(uri)
+        }
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
@@ -99,6 +110,16 @@ fun ItemDetailsScreen(
                 Icon(
                     imageVector = Icons.Default.Share,
                     contentDescription = stringResource(R.string.share_item_title),
+                )
+            }
+            IconButton(
+                onClick = { saveFileLauncher.launch("${uiState.value.itemDetails.name}.json") },
+                modifier = Modifier.absolutePadding(310.dp, 10.dp),
+                enabled = true
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_save),
+                    contentDescription = stringResource(R.string.save_action),
                 )
             }
         }, floatingActionButton = {
