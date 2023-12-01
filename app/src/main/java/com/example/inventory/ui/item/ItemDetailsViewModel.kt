@@ -18,6 +18,7 @@ package com.example.inventory.ui.item
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,6 +34,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
+import java.nio.charset.StandardCharsets
 
 
 /**
@@ -93,26 +96,35 @@ class ItemDetailsViewModel(
 
     fun saveToFile(uri: Uri) {
         val contentResolver = MAIN.applicationContext.contentResolver
-        val inputStream = contentResolver.openInputStream(uri)
 
-        if (inputStream != null) {
-            val file = File(MAIN.applicationContext.cacheDir, "temp.json")
-
-            val encryptedFile = EncryptedFile.Builder(
-                MAIN.applicationContext,
-                file,
-                MASTER_KEY,
-                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
-            ).build()
+        val file = File(MAIN.applicationContext.cacheDir, "temp.json")
+        if (file.exists())
             file.delete()
 
-            val jsonItem = Gson().toJson(uiState.value.itemDetails)
+        val encryptedFile = EncryptedFile.Builder(
+            MAIN.applicationContext,
+            file,
+            MASTER_KEY,
+            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
 
-            encryptedFile.openFileOutput().use { outputStream ->
-                outputStream.write(jsonItem.toByteArray())
+        encryptedFile.openFileOutput().apply {
+            val jsonItem = Gson().toJson(uiState.value.itemDetails.toItem())
+            write(jsonItem.toByteArray())
+            close()
+        }
+
+        contentResolver.openFileDescriptor(uri, "w")?.use { descriptor ->
+            FileOutputStream(descriptor.fileDescriptor).use { outputStream ->
+                file.inputStream().use { inputStream ->
+                    inputStream.copyTo(outputStream)
+                    inputStream.close()
+                }
                 outputStream.close()
             }
         }
+        file.delete()
+
     }
 }
 

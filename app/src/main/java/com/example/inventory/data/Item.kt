@@ -36,7 +36,7 @@ data class Item(
     val shipperName: String,
     val shipperPhone: String,
     val shipperEmail: String,
-    val sourceType: SourceType
+    var sourceType: SourceType
 ): Parcelable
 
 enum class SourceType {

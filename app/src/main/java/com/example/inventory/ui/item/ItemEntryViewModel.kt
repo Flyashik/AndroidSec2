@@ -16,15 +16,28 @@
 
 package com.example.inventory.ui.item
 
+import android.net.Uri
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.net.toFile
 import androidx.lifecycle.ViewModel
+import androidx.security.crypto.EncryptedFile
+import com.example.inventory.MAIN
+import com.example.inventory.MASTER_KEY
 import com.example.inventory.data.Item
 import com.example.inventory.data.ItemsRepository
 import com.example.inventory.data.Settings
 import com.example.inventory.data.SourceType
+import com.google.gson.Gson
+import java.io.File
+import java.io.FileInputStream
 import java.text.NumberFormat
+import javax.crypto.Cipher
+import javax.crypto.CipherInputStream
 
 /**
  * ViewModel to validate and insert items in the Room database.
@@ -56,6 +69,42 @@ class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewMod
     suspend fun saveItem() {
         if (validateInput()) {
             itemsRepository.insertItem(itemUiState.itemDetails.toItem())
+        }
+    }
+
+    suspend fun loadFromFile(uri: Uri) {
+        val contentResolver = MAIN.applicationContext.contentResolver
+
+        val file = File(MAIN.applicationContext.cacheDir, "temp.json")
+        if (file.exists())
+            file.delete()
+
+        val encryptedFile = EncryptedFile.Builder(
+            MAIN.applicationContext,
+            file,
+            MASTER_KEY,
+            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
+
+        file.outputStream().use { outputStream ->
+            contentResolver.openFileDescriptor(uri, "r")?.use { descriptor ->
+                FileInputStream(descriptor.fileDescriptor).use { inputStream ->
+                    inputStream.copyTo(outputStream)
+                    inputStream.close()
+                }
+                outputStream.close()
+            }
+        }
+
+        encryptedFile.openFileInput().use { inputStream ->
+            val jsonItem = String(inputStream.readBytes())
+            val gson = Gson()
+            val item = gson.fromJson(jsonItem, Item::class.java)
+            item.sourceType = SourceType.File
+
+            itemsRepository.insertItem(item)
+
+            file.delete()
         }
     }
 }

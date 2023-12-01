@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -53,7 +52,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -91,7 +89,8 @@ fun ItemDetailsScreen(
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.CreateDocument()
         ) { uri ->
-            if (uri == null) return@rememberLauncherForActivityResult
+            if (uri == null)
+                return@rememberLauncherForActivityResult
             viewModel.saveToFile(uri)
         }
     val coroutineScope = rememberCoroutineScope()
@@ -118,7 +117,7 @@ fun ItemDetailsScreen(
                 enabled = true
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_save),
+                    painter = painterResource(id = R.drawable.ic_upload),
                     contentDescription = stringResource(R.string.save_action),
                 )
             }
@@ -253,6 +252,13 @@ fun ItemDetails(
             ItemDetailsRow(
                 labelResID = R.string.shipper_email,
                 itemDetail = if (!Settings.hideSensitiveData) item.shipperEmail else "*******",
+                modifier = Modifier.padding(
+                    horizontal = dimensionResource(id = R.dimen.padding_medium)
+                )
+            )
+            ItemDetailsRow(
+                labelResID = R.string.source_type,
+                itemDetail = item.sourceType.toString(),
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(id = R.dimen.padding_medium)
                 )
