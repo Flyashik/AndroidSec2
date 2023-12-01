@@ -62,8 +62,16 @@ class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewMod
 
     private fun validateInput(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
         return with(uiState) {
-            name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank()
+            name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank() && shipperName.isNotBlank()
+                    && shipperEmail.isNotBlank() && shipperPhone.isNotBlank()
+                    && isValidEmail(shipperEmail)
         }
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
+
+        return email.matches(emailRegex.toRegex())
     }
 
     suspend fun saveItem() {

@@ -44,12 +44,18 @@ class ItemEditViewModel(
 
     private val itemId: Int = checkNotNull(savedStateHandle[ItemEditDestination.itemIdArg])
 
-
     private fun validateInput(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
         return with(uiState) {
             name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank()
                     && shipperName.isNotBlank() && shipperPhone.isNotBlank() && shipperEmail.isNotBlank()
+                    && isValidEmail(shipperEmail)
         }
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
+
+        return email.matches(emailRegex.toRegex())
     }
 
     init {
